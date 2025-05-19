@@ -68,6 +68,7 @@ public class CustomerController {
 	public String dashboard(HttpSession session,Model model) {
 		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
 		if(customer==null) return "redirect:/login";
+		
 		model.addAttribute("customer",customer);
 		return "customer/dashboard";
 	}
