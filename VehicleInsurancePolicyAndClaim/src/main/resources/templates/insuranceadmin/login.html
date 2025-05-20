@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Insurance Admin Login</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+    <h2>Insurance Admin Login</h2>
+    <form th:action="@{/insuranceadmin/login}" method="post">
+        <label>Username:</label>
+        <input type="text" name="username" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <button type="submit">Login</button>
+    </form>
+    <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+</body>
+</html>

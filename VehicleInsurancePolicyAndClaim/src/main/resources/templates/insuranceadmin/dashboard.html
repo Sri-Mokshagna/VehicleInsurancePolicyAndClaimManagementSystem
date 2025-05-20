@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+    <h2>Welcome, Admin</h2>
+    <a th:href="@{/insuranceadmin/logout}">Logout</a>
+ 
+    <h3>Pending Claims</h3>
+    <table border="1">
+        <tr>
+            <th>Claim ID</th>
+            <th>Vehicle ID</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="claim : ${claims}">
+            <td th:text="${claim.claimId}"></td>
+            <td th:text="${claim.vehicleId}"></td>
+            <td th:text="${claim.description}"></td>
+            <td th:text="${claim.status}"></td>
+            <td>
+                <form th:action="@{/insuranceadmin/updateClaimStatus}" method="post">
+                    <input type="hidden" name="claimId" th:value="${claim.claimId}">
+                    <select name="status">
+                        <option value="APPROVED">APPROVE</option>
+                        <option value="REJECTED">REJECT</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+ 
+    <h3>Create New Policy</h3>
+    <form th:action="@{/insuranceadmin/createPolicy}" method="post">
+        <label>Vehicle ID:</label><input type="text" name="vehicleId" required><br>
+        <label>Policy Number:</label><input type="text" name="policyNumber" required><br>
+        <label>Coverage Amount:</label><input type="number" name="coverageAmount" required><br>
+        <label>Premium Amount:</label><input type="number" name="premiumAmount" required><br>
+        <label>Start Date:</label><input type="date" name="startDate" required><br>
+        <label>End Date:</label><input type="date" name="endDate" required><br>
+        <label>Status:</label>
+        <select name="policyStatus">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="EXPIRED">EXPIRED</option>
+        </select><br>
+        <button type="submit">Create Policy</button>
+    </form>
+</body>
+</html>
