@@ -9,4 +9,5 @@ import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
 
 public interface VehicleRepository extends JpaRepository<Vehicle,Long> {
 	List<Vehicle> findByCustomer(Customer customer);
+	List<Vehicle> findByCustomerAndPolicyIsNull(Customer customer);
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Vehicle {
@@ -83,6 +84,30 @@ public class Vehicle {
 	@JoinColumn(name="customer_id")
 	private Customer customer;
 	
+	public double getCc() {
+		return cc;
+	}
+
+	public void setCc(double cc) {
+		this.cc = cc;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public Policy getPolicy() {
+		return policy;
+	}
+
+	public void setPolicy(Policy policy) {
+		this.policy = policy;
+	}
+
 	private String registrationNumber;
 	private String make;
 	private String model;
@@ -90,7 +115,10 @@ public class Vehicle {
 	
 	@Enumerated(EnumType.STRING)
 	private VehicleType vehicleType;
-	
+	private double cc;
+	private double price;
 	private String imagePath;
 	
+	@OneToOne(mappedBy="vehicle")
+	private Policy policy;
 }

@@ -1,5 +1,6 @@
 package com.project.VehicleInsurancePolicyAndClaim.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,7 +11,7 @@ public class InsuranceAdmin {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long adminId;
-	
+	@Column(unique=true)
 	private String username;
 	private String password;
 	public Long getAdminId() {

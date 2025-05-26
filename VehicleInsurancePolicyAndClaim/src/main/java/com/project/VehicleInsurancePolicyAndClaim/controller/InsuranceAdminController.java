@@ -7,16 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
 import com.project.VehicleInsurancePolicyAndClaim.model.InsuranceAdmin;
-import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
-import com.project.VehicleInsurancePolicyAndClaim.repository.ClaimRepository;
-import com.project.VehicleInsurancePolicyAndClaim.repository.PolicyRepository;
 import com.project.VehicleInsurancePolicyAndClaim.service.InsuranceAdminService;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,62 +21,44 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/insuranceadmin")
 public class InsuranceAdminController {
- 
-//    @Autowired
-//    private InsuranceAdminService adminService;
-// 
-//    @Autowired
-//    private ClaimRepository claimRepository;
-// 
-//    @Autowired
-//    private PolicyRepository policyRepository;
- 
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "insuranceadmin/login";
-    }
- 
-//    @PostMapping("/login")
-//    public String processLogin(@RequestParam String username,
-//                                @RequestParam String password,
-//                                HttpSession session,
-//                                Model model) {
-//        //Optional<InsuranceAdmin> admin = adminService.authenticate(username, password);
-//        if (admin.isPresent()) {
-//            session.setAttribute("admin", admin.get());
-//            return "redirect:/insuranceadmin/dashboard";
-//        } else {
-//           model.addAttribute("error", "Invalid Credentials");
-//           return "insuranceadmin/login";
-//        }
-//    }
- 
-    @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
-        if (session.getAttribute("admin") == null) return "redirect:/insuranceadmin/login";
- 
-        //List<Claim> pendingClaims = claimRepository.findByStatus("PENDING");
-        //model.addAttribute("claims", pendingClaims);
-        return "insuranceadmin/dashboard";
-    }
- 
-    @PostMapping("/createPolicy")
-    public String createPolicy(@ModelAttribute Policy policy) {
-        //policyRepository.save(policy);
-        return "redirect:/insuranceadmin/dashboard";
-    }
- 
-    @PostMapping("/updateClaimStatus")
-    public String updateClaimStatus(@RequestParam Long claimId, @RequestParam String status) {
-//        Claim claim = claimRepository.findById(claimId).orElseThrow();
-//        claim.setStatus(status);
-//        claimRepository.save(claim);
-        return "redirect:/insuranceadmin/dashboard";
-    }
- 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/insuranceadmin/login";
-    }
+	@Autowired
+	private InsuranceAdminService insuranceAdminService;
+	
+	@GetMapping("/login")
+	public String loginForm() {
+		return "admin/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(@RequestParam String username, @RequestParam String password, HttpSession session,Model model) {
+		Optional<InsuranceAdmin> admin = insuranceAdminService.authenticate(username, password);
+		if(!admin.isEmpty()) {
+			session.setAttribute("loggedInAdmin", admin);
+			return "redirect:/insuranceadmin/dashboard";
+		}
+		model.addAttribute("error", "Invalid Username or Password");
+		return "admin/login";
+	}
+	
+	@GetMapping("/dashboard")
+	public String dashboard(Model model,HttpSession session) {
+		if(session.getAttribute("loggedInAdmin")==null) return "redirect:/insuranceadmin/login";
+		List<Claim> submittedClaims = insuranceAdminService.getSubmittedClaims();
+		model.addAttribute("claims",submittedClaims);
+		return "admin/dashboard";
+	}
+	@GetMapping("/claim/{id}")
+	public String viewClaim(@PathVariable Long id,Model model, HttpSession session) {
+		if(session.getAttribute("loggedInAdmin")==null)
+			return "redirect:/insuranceadmin/login";
+		Claim claim = insuranceAdminService.getClaimById(id);
+		model.addAttribute("claim", claim);
+		model.addAttribute("policy", claim.getPolicy());
+		return "admin/viewclaim";
+	}
+	@PostMapping("/claim/{id}/update")
+	public String updateClaim(@PathVariable Long id, @RequestParam String status, @RequestParam String reason) {
+		insuranceAdminService.updateClaimStatus(id, status, reason);
+		return "redirect:/insuranceadmin/dashboard";
+	}
 }

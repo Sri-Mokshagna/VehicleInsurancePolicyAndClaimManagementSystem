@@ -37,6 +37,10 @@ public class VehicleService {
 	public List<Vehicle> getVehiclesByCustomer(Customer customer){
 		return vehicleRepository.findByCustomer(customer);
 	}
+	 
+	public List<Vehicle> getVehicleWithoutPolicy(Customer customer){
+		return vehicleRepository.findByCustomerAndPolicyIsNull(customer);
+	}
 	
 	public Vehicle getVehicleById(Long id) {
 		return vehicleRepository.findById(id).orElse(null);
