@@ -27,7 +27,7 @@
  <div th:fragment="navbar-login">
  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Insurance Portal</a>
+        <a class="navbar-brand" th:href="@{/dashboard}">Insurance Portal</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@
 </div>
 <!-- Footer Fragment -->
 <div th:fragment="footer">
-    <footer class="mt-auto" style="background-color: #343a40; color: white; padding: 20px 0;">
+    <footer class="mt-auto py-3" style="background-color: #343a40; color: white; padding: 20px 0;">
         <div class="container text-center">
             <p class="mb-1">&copy; 2025 Vehicle Insurance Portal. All rights reserved.</p>
             <div class="footer-links">

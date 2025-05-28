@@ -1,39 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Policy Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .policy-card {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .policy-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+ 
+        .policy-card p {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+ 
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+ 
+        .claim-section {
+            margin-top: 40px;
+        }
+ 
+        .claim-card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Policy Details</h1>
+<div class="container">
+    <h1 class="mt-4 text-center">Policy Details</h1>
  
-        <div class="policy-card">
-            <h2>Policy Number: [[${policy.policyNumber}]]</h2>
-            <p><strong>Vehicle:</strong> [[${policy.vehicle.registrationNumber}]]</p>
-            <p><strong>Make:</strong> [[${policy.vehicle.make}]]</p>
-            <p><strong>Model:</strong> [[${policy.vehicle.model}]]</p>
-            <p><strong>Year of Manufacture:</strong> [[${policy.vehicle.yearOfManufacture}]]</p>
-            <p><strong>Coverage Type:</strong> [[${policy.coverageType}]]</p>
-            <p><strong>Coverage Amount:</strong> ₹[[${policy.coverageAmount}]]</p>
-            <p><strong>Premium Amount:</strong> ₹[[${policy.premiumAmount}]]</p>
-            <p><strong>Start Date:</strong> [[${policy.startDate}]]</p>
-            <p><strong>End Date:</strong> [[${policy.endDate}]]</p>
-            <p><strong>Status:</strong> [[${policy.policyStatus}]]</p>
+    <div class="policy-card">
+        <h2>Policy #: <span th:text="${policy.policyNumber}">PN12345</span></h2>
  
-            <div class="action-buttons">
-                <form action="/renewpolicy/[[${policy.policyId}]]" method="post">
-                    <button type="submit"
-                            class="btn btn-success"
-                            th:disabled="${policy.policyStatus != 'EXPIRED'}">
-                        Renew Policy
-                    </button>
-                </form>
-                <a href="/policies" class="btn btn-secondary">Back to Policies</a>
+        <p><strong>Vehicle:</strong> <span th:text="${policy.vehicle.registrationNumber}"></span></p>
+        <p><strong>Make:</strong> <span th:text="${policy.vehicle.make}"></span></p>
+        <p><strong>Model:</strong> <span th:text="${policy.vehicle.model}"></span></p>
+        <p><strong>Year of Manufacture:</strong> <span th:text="${policy.vehicle.yearOfManufacture}"></span></p>
+        <p><strong>Coverage Type:</strong> <span th:text="${policy.coverageType}"></span></p>
+        <p><strong>Coverage Amount:</strong> ₹<span th:text="${policy.coverageAmount}"></span></p>
+        <p><strong>Premium Amount:</strong> ₹<span th:text="${policy.premiumAmount}"></span></p>
+        <p><strong>Start Date:</strong> <span th:text="${policy.startDate}"></span></p>
+        <p><strong>End Date:</strong> <span th:text="${policy.endDate}"></span></p>
+        <p><strong>Status:</strong> <span th:text="${policy.policyStatus}"></span></p>
+ 
+        <div class="action-buttons">
+            <form th:action="@{'/renewpolicy/' + ${policy.policyId}}" method="post">
+                <button type="submit" class="btn btn-success"
+                        th:disabled="${policy.policyStatus != 'EXPIRED'}">Renew Policy</button>
+            </form>
+            <a href="/policies" class="btn btn-secondary">Back to Policies</a>
+        </div>
+    </div>
+ 
+    <!-- Optional: Claim Details Section -->
+    <div class="claim-section" th:if="${claims != null and #lists.size(claims) > 0}">
+        <h3 class="mt-5 mb-3">Related Claims</h3>
+        <div class="row">
+            <div class="col-md-6" th:each="claim : ${claims}">
+                <div class="claim-card">
+                    <p><strong>Claim Amount:</strong> ₹<span th:text="${claim.claimAmount}"></span></p>
+                    <p><strong>Reason:</strong> <span th:text="${claim.claimReason}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${claim.claimStatus}"></span></p>
+                    <div th:if="${claim.imagePath}">
+                        <img th:src="@{'/uploads/' + ${claim.imagePath}}" class="img-fluid rounded mt-2" style="max-height:150px;" alt="Damage Image"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

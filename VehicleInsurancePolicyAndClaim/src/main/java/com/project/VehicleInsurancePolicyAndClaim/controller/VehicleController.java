@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
 import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
 import com.project.VehicleInsurancePolicyAndClaim.model.VehicleType;
+import com.project.VehicleInsurancePolicyAndClaim.repository.VehicleRepository;
+import com.project.VehicleInsurancePolicyAndClaim.service.ClaimService;
 import com.project.VehicleInsurancePolicyAndClaim.service.VehicleService;
 
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +25,11 @@ import jakarta.servlet.http.HttpSession;
 public class VehicleController {
 	@Autowired
 	private VehicleService vehicleService;
+	
+	@Autowired
+	private ClaimService claimService;
+	
+	
 	
 	@GetMapping("/vehicles")
 	public String listVehicles(HttpSession session,Model model) {
@@ -50,7 +57,9 @@ public class VehicleController {
 	
 	@GetMapping("/vehicle/{id}")
 	public String viewVehicle(@PathVariable Long id, Model model) {
+		Vehicle vehicle = vehicleService.getVehicleById(id);
 		model.addAttribute("vehicle",vehicleService.getVehicleById(id));
+		model.addAttribute("claims", claimService.getClaimsByVehicle(vehicle));
 		return "vehicle/viewVehicle";
 	}
 }

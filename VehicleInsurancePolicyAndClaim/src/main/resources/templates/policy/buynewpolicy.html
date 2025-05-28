@@ -5,29 +5,75 @@
     <title>Buy New Policy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .coverage-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+ 
+        .coverage-type {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+ 
+        .badge-standard {
+            background-color: #6c757d;
+        }
+ 
+        .badge-premium {
+            background-color: #ffc107;
+            color: #212529;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-<div th:replace="fragments :: navbar-login"></div>
-    <h2>Buy New Policy</h2>
+    <div th:replace="fragments :: navbar-login"></div>
+ 
+    <h2 class="mt-4 mb-3">Buy New Policy</h2>
+ 
+    <!-- Coverage Type Explanation -->
+    <div class="coverage-info">
+        <h5 class="mb-3">Coverage Type Details</h5>
+        <div class="mb-2">
+            <span class="badge badge-standard text-light p-2">STANDARD</span>
+            <p class="mb-0">✔ 80% of vehicle's price as coverage</p>
+            <p>✔ Base premium = 1.5% of price + ₹0.5 per CC + ₹100/year of age</p>
+        </div>
+        <div>
+            <span class="badge badge-premium p-2">PREMIUM</span>
+            <p class="mb-0">✔ 100% of vehicle's price as coverage</p>
+            <p>✔ Premium includes all STANDARD charges × 1.25 (more coverage, higher premium)</p>
+        </div>
+    </div>
+ 
+    <!-- Policy Form -->
     <form action="/buynewpolicy/preview" method="post">
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="vehicleId">Select Vehicle:</label>
             <select class="form-control" id="vehicleId" name="vehicleId" required>
                 <option th:each="vehicle : ${vehicles}" th:value="${vehicle.vehicleId}"
                         th:text="${vehicle.registrationNumber}">Vehicle</option>
             </select>
         </div>
-        <div class="form-group">
+ 
+        <div class="form-group mb-3">
             <label for="coverageType">Select Coverage Type:</label>
             <select class="form-control" id="coverageType" name="coverageType" required>
                 <option value="STANDARD">Standard</option>
                 <option value="PREMIUM">Premium</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-success mt-3">Calculate Premium</button>
+ 
+        <button type="submit" class="btn btn-success">Calculate Premium</button>
     </form>
 </div>
+ 
 <div th:replace="fragments :: footer"></div>
 </body>
 </html>
+ 

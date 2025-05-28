@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
 import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
+import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
 import com.project.VehicleInsurancePolicyAndClaim.repository.ClaimRepository;
 import com.project.VehicleInsurancePolicyAndClaim.repository.PolicyRepository;
 
@@ -39,5 +40,9 @@ public class ClaimService {
 	}
 	public List<Claim> getClaimsByCustomer(Customer customer){
 		return claimRepository.findByPolicy_Vehicle_Customer(customer);
+	}
+	public List<Claim> getClaimsByVehicle(Vehicle vehicle) {
+		List<Claim> vehicles =  claimRepository.findByPolicy_Vehicle(vehicle);
+		return vehicles;
 	}
 }

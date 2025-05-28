@@ -1,5 +1,6 @@
 package com.project.VehicleInsurancePolicyAndClaim.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
+import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
 import com.project.VehicleInsurancePolicyAndClaim.service.CustomerService;
+import com.project.VehicleInsurancePolicyAndClaim.service.VehicleService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -19,7 +22,8 @@ import jakarta.servlet.http.HttpSession;
 public class CustomerController {
 	@Autowired 
 	private CustomerService customerService;
-	
+	@Autowired
+	private VehicleService vehicleService;
 	@GetMapping("/")
 	public String home() {
 		return "home";
@@ -68,8 +72,9 @@ public class CustomerController {
 	public String dashboard(HttpSession session,Model model) {
 		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
 		if(customer==null) return "redirect:/login";
-		
+		List<Vehicle> vehicles = vehicleService.getVehiclesByCustomer(customer);
 		model.addAttribute("customer",customer);
+		model.addAttribute("vehicles", vehicles);
 		return "customer/dashboard";
 	}
 }

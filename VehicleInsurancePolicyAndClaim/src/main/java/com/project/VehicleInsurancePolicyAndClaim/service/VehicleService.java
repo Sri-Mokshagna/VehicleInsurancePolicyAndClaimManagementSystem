@@ -45,4 +45,5 @@ public class VehicleService {
 	public Vehicle getVehicleById(Long id) {
 		return vehicleRepository.findById(id).orElse(null);
 	}
+
 }

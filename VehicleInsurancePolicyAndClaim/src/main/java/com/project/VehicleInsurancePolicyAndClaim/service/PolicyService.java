@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
@@ -57,6 +58,26 @@ public class PolicyService {
     
     public Policy getPolicyById(Long id) {
     	return policyRepository.findById(id).orElseThrow(()-> new RuntimeException("Policy not found"));
+    }
+    
+    public void renewPolicy(Policy policy) {
+    	LocalDate  newStartDate = LocalDate.now();
+    	LocalDate newEndDate = newStartDate.plusYears(1);
+    	policy.setStartDate(newStartDate);
+    	policy.setEndDate(newEndDate);
+    	policy.setPolicyStatus("ACTIVE");
+    	policyRepository.save(policy);
+    }
+    
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void expireOldPolicies() {
+        List<Policy> allPolicies = policyRepository.findAll();
+        for (Policy policy : allPolicies) {
+            if (policy.getEndDate().isBefore(LocalDate.now())) {
+                policy.setPolicyStatus("EXPIRED");
+                policyRepository.save(policy);
+            }
+        }
     }
 
 }

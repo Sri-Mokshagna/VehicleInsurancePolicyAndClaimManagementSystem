@@ -84,4 +84,23 @@ public class PolicyController {
         model.addAttribute("policy", policy);
         return "policy/viewpolicy";
     }
+	
+	@PostMapping("/renewpolicy/{id}")
+	public String renewPolicy(@PathVariable Long id,HttpSession session) {
+		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+		if(customer==null) return "redirect:/login";
+		Policy policy = policyService.getPolicyById(id);
+		
+		if(policy.getVehicle().getCustomer().getCustomerId() != (customer.getCustomerId())){
+			return "redirect:/policies";
+		}
+		
+		if(!policy.getPolicyStatus().equalsIgnoreCase("EXPIRED")) {
+			return "redirect:/policies";
+		}
+		
+		policyService.renewPolicy(policy);
+		return "redirect:/policies";
+	}
+	
 }
