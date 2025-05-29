@@ -24,7 +24,33 @@
 <!-- Main Content -->
 <div class="container mt-4">
     <h2 class="text-center mb-4">Your Policies</h2>
- 
+ 	<!-- Summary Info -->
+<div class="row justify-content-center mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">Active Policies</h5>
+                <p class="card-text fs-4" th:text="${activeCount}">0</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">Expired Policies</h5>
+                <p class="card-text fs-4" th:text="${expiredCount}">0</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">Renew Soon</h5>
+                <p class="card-text fs-4" th:text="${renewSoonCount}">0</p>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="text-end mb-4">
         <a href="/buynewpolicy" class="btn btn-primary">Buy New Policy</a>
     </div>

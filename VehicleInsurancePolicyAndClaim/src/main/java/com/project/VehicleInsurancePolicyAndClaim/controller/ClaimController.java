@@ -15,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
 import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
 import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
+import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
 import com.project.VehicleInsurancePolicyAndClaim.service.ClaimService;
 import com.project.VehicleInsurancePolicyAndClaim.service.PolicyService;
+import com.project.VehicleInsurancePolicyAndClaim.service.VehicleService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,12 +30,17 @@ public class ClaimController {
  
     @Autowired
     private PolicyService policyService;
+    
+    @Autowired
+    private VehicleService vehicleService;
  
     @GetMapping("/claims")
     public String viewClaims(HttpSession session, Model model) {
         Customer customer = (Customer) session.getAttribute("loggedInCustomer");
         if (customer == null) return "redirect:/login";
         List<Claim> claims = claimService.getClaimsByCustomer(customer);
+        List<Vehicle> vehicles = vehicleService.getVehiclesByCustomer(customer);
+        model.addAttribute("vehicles", vehicles);
         model.addAttribute("claims", claims);
         return "claim/claims";
     }

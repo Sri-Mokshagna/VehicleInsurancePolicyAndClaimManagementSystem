@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
 import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
+import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
 import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
+import com.project.VehicleInsurancePolicyAndClaim.service.ClaimService;
 import com.project.VehicleInsurancePolicyAndClaim.service.CustomerService;
+import com.project.VehicleInsurancePolicyAndClaim.service.PolicyService;
 import com.project.VehicleInsurancePolicyAndClaim.service.VehicleService;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +28,10 @@ public class CustomerController {
 	private CustomerService customerService;
 	@Autowired
 	private VehicleService vehicleService;
+	@Autowired
+	private PolicyService policyService;
+	@Autowired
+	private ClaimService claimService;
 	@GetMapping("/")
 	public String home() {
 		return "home";
@@ -73,8 +81,14 @@ public class CustomerController {
 		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
 		if(customer==null) return "redirect:/login";
 		List<Vehicle> vehicles = vehicleService.getVehiclesByCustomer(customer);
+		List<Policy> policies = policyService.getPoliciesForCustomer(customer);
+		List<Claim> claims = claimService.getClaimsByCustomer(customer);
+		List<Claim> pendingClaims = claimService.getClaimByStatus("SUBMITTED");
+		model.addAttribute("policies", policies);
+		model.addAttribute("claims", claims);
 		model.addAttribute("customer",customer);
 		model.addAttribute("vehicles", vehicles);
+		model.addAttribute("pendingClaims", pendingClaims);
 		return "customer/dashboard";
 	}
 }

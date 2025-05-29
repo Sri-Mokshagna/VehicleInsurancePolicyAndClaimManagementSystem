@@ -1,5 +1,6 @@
 package com.project.VehicleInsurancePolicyAndClaim.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,16 @@ public class PolicyController {
 	public String viewPolicies(HttpSession session, Model model) {
 		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
 		List<Policy> policies = policyService.getPoliciesForCustomer((long) customer.getCustomerId());
+		long activeCount = policies.stream().filter(p -> p.getPolicyStatus().equals("ACTIVE")).count();
+	    long expiredCount = policies.stream().filter(p -> p.getPolicyStatus().equals("EXPIRED")).count();
+	    long renewSoonCount = policies.stream()
+	        .filter(p -> p.getPolicyStatus().equals("ACTIVE") &&
+	                     p.getEndDate().isBefore(LocalDate.now().plusDays(15)))
+	        .count();
 		model.addAttribute("policies", policies);
+		model.addAttribute("activeCount", activeCount);
+	    model.addAttribute("expiredCount", expiredCount);
+	    model.addAttribute("renewSoonCount", renewSoonCount);
 		return "policy/policies";
 	}
  

@@ -45,4 +45,8 @@ public class ClaimService {
 		List<Claim> vehicles =  claimRepository.findByPolicy_Vehicle(vehicle);
 		return vehicles;
 	}
+	public List<Claim> getClaimByStatus(String status){
+		List<Claim> claims = claimRepository.findByClaimStatus(status);
+		return claims;
+	}
 }
