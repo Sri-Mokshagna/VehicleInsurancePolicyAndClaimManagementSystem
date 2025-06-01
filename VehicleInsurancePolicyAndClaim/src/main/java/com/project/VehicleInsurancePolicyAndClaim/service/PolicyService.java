@@ -45,6 +45,7 @@ public class PolicyService {
         policy.setPolicyNumber(generateRandomPolicyNumber());
         policy.setCoverageType(coverageType);
         policy.setVehicle(vehicle);
+        policy.setBalance(policy.getCoverageAmount());        
         return policy;
     }
  

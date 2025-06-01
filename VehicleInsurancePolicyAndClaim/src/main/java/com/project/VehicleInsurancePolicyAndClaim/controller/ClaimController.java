@@ -53,7 +53,7 @@ public class ClaimController {
         model.addAttribute("claim", new Claim());
         return "claim/createclaim";
     }
- 
+    
     @PostMapping("/createclaim")
     public String fileClaim(@ModelAttribute Claim claim,
                             @RequestParam("image") MultipartFile image,

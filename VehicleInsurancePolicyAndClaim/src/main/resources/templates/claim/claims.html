@@ -58,6 +58,9 @@
                                             (${claim.claimStatus} == 'SUBMITTED' ? 'text-warning' : 'text-body'))">
                         </span>
                     </p>
+                    <p class="card-text text-success fw-bold" th:if="${claim.claimStatus=='APPROVED'}">
+                    	Refunded Amount: Rs<span th:text="${claim.claimAmount}"></span>
+                    </p>
                     <div th:if="${claim.imagePath}">
                         <img th:src="@{'/uploads/' + ${claim.imagePath}}" class="claim-img rounded mt-2" alt="Damage Image"/>
                     </div>

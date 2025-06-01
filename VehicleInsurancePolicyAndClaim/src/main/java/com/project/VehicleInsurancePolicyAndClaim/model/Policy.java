@@ -35,6 +35,8 @@ public class Policy {
 	private String policyStatus;
 	private String coverageType;
 	
+	private double balance;
+	
 	public String getCoverageType() {
 		return coverageType;
 	}
@@ -105,5 +107,13 @@ public class Policy {
 
 	public void setPolicyStatus(String policyStatus) {
 		this.policyStatus = policyStatus;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 }

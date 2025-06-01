@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
 import com.project.VehicleInsurancePolicyAndClaim.model.InsuranceAdmin;
+import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
 import com.project.VehicleInsurancePolicyAndClaim.repository.ClaimRepository;
 import com.project.VehicleInsurancePolicyAndClaim.repository.InsuranceAdminRepository;
+import com.project.VehicleInsurancePolicyAndClaim.repository.PolicyRepository;
 
 @Service
 public class InsuranceAdminService {
@@ -18,6 +20,9 @@ public class InsuranceAdminService {
 	
 	@Autowired
 	private ClaimRepository claimRepo;
+	
+	@Autowired
+	private PolicyRepository policyRepo;
 	
 	public List<Claim> getSubmittedClaims(){
 		return claimRepo.findByClaimStatus("SUBMITTED");
@@ -33,6 +38,12 @@ public class InsuranceAdminService {
 		if(claim!=null) {
 			claim.setClaimStatus(status);
 			claim.setClaimReason(reason);
+			if("APPROVED".equalsIgnoreCase(status)) {
+				Policy policy = claim.getPolicy();
+				double newBalance = policy.getBalance()-claim.getClaimAmount();
+				policy.setBalance(newBalance);
+				policyRepo.save(policy);
+			}
 			claimRepo.save(claim);
 		}
 	}
