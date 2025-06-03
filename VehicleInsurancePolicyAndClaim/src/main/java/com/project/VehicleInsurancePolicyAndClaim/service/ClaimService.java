@@ -41,6 +41,9 @@ public class ClaimService {
 	public List<Claim> getClaimsByCustomer(Customer customer){
 		return claimRepository.findByPolicy_Vehicle_Customer(customer);
 	}
+	public List<Claim> getClaimsByCustomer(Long customerId){
+		return claimRepository.findByPolicy_Vehicle_CustomerCustomerId(customerId);
+	}
 	public List<Claim> getClaimsByVehicle(Vehicle vehicle) {
 		List<Claim> vehicles =  claimRepository.findByPolicy_Vehicle(vehicle);
 		return vehicles;

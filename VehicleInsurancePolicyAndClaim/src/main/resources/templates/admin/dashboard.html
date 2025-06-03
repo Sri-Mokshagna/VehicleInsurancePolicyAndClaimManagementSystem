@@ -11,10 +11,46 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Insurance Admin</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/insuranceadmin/customers}">Customers</a>
+            </li>
+        </ul>
+    </div>
 </nav>
  
 <div class="container mt-5">
-    <h3>Submitted Claims</h3>
+    <h3>Search Customer</h3>
+    <form method="get" action="#" th:action="@{/insuranceadmin/search}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="username" class="form-control" placeholder="Enter customer username">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+ 
+    <div th:if="${customer != null}">
+        <h4>Customer Details</h4>
+        <p><strong>Username:</strong> <span th:text="${customer.name}"></span></p>
+ 
+        <h5>Policies</h5>
+        <ul class="list-group mb-3">
+            <li class="list-group-item" th:each="policy : ${policies}">
+                <span th:text="'Policy #' + ${policy.policyId}"></span>
+                <a th:href="@{'/insuranceadmin/policy/' + ${policy.policyId} + '/report'}" class="btn btn-sm btn-outline-success float-end">Download Report</a>
+            </li>
+        </ul>
+ 
+        <h5>Claims</h5>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="claim : ${claimss}">
+                <span th:text="'Claim #' + ${claim.claimId} + ' - ' + ${claim.claimReason}"></span>
+                <a th:href="@{'/insuranceadmin/claim/' + ${claim.claimId} + '/report'}" class="btn btn-sm btn-outline-success float-end">Download Report</a>
+            </li>
+        </ul>
+    </div>
+ 
+    <h3 class="mt-5">Submitted Claims</h3>
     <div class="row">
         <div class="col-md-4" th:each="claim : ${claims}">
             <div class="card mb-4 shadow">

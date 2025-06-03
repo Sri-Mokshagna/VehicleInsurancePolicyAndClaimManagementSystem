@@ -13,9 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
+import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
 import com.project.VehicleInsurancePolicyAndClaim.model.InsuranceAdmin;
+import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
+import com.project.VehicleInsurancePolicyAndClaim.service.ClaimService;
+import com.project.VehicleInsurancePolicyAndClaim.service.CustomerService;
 import com.project.VehicleInsurancePolicyAndClaim.service.InsuranceAdminService;
+import com.project.VehicleInsurancePolicyAndClaim.service.PolicyService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -23,6 +29,15 @@ import jakarta.servlet.http.HttpSession;
 public class InsuranceAdminController {
 	@Autowired
 	private InsuranceAdminService insuranceAdminService;
+	
+	@Autowired
+	private PolicyService policyService;
+	
+	@Autowired
+	private ClaimService claimService;
+	
+	@Autowired
+	private CustomerService customerService;
 	
 	@GetMapping("/login")
 	public String loginForm() {
@@ -56,9 +71,68 @@ public class InsuranceAdminController {
 		model.addAttribute("policy", claim.getPolicy());
 		return "admin/viewclaim";
 	}
+	
 	@PostMapping("/claim/{id}/update")
 	public String updateClaim(@PathVariable Long id, @RequestParam String status, @RequestParam String reason) {
 		insuranceAdminService.updateClaimStatus(id, status, reason);
 		return "redirect:/insuranceadmin/dashboard";
 	}
+	
+	@GetMapping("/search")
+	public String searchCustomer(@RequestParam String username, Model model, HttpSession session) {
+	    if (session.getAttribute("loggedInAdmin") == null)
+	        return "redirect:/insuranceadmin/login";
+	    
+	    Optional<Customer> customerOpt = insuranceAdminService.findCustomerByName(username);
+	    if (customerOpt.isPresent()) {
+	        Customer customer = customerOpt.get();
+	        List<Policy> policies = insuranceAdminService.getPoliciesByCustomer(customer);
+	        List<Claim> claimss = insuranceAdminService.getClaimsByCustomer(customer);
+	 
+	        model.addAttribute("customer", customer);
+	        model.addAttribute("policies", policies);
+	        model.addAttribute("claimss", claimss);
+	    } else {
+	        model.addAttribute("error", "Customer not found");
+	    }
+	 
+	    List<Claim> submittedClaims = insuranceAdminService.getSubmittedClaims();
+	    model.addAttribute("claims", submittedClaims);
+	    return "admin/dashboard";
+	}
+	 
+	@GetMapping("/policy/{policyId}/report")
+	public String showReportDownloadPage(@PathVariable Long policyId, Model model, HttpSession session) {
+	    if (session.getAttribute("loggedInAdmin") == null)
+	        return "redirect:/insuranceadmin/login";
+	 
+	    model.addAttribute("policyId", policyId);
+	    return "admin/downloadreport";
+	}
+	
+	@GetMapping("/customers")
+	public String showCustomers(Model model, HttpSession session) {
+	    if (session.getAttribute("loggedInAdmin") == null)
+	        return "redirect:/insuranceadmin/login";
+	 
+	    List<Customer> customers = insuranceAdminService.getAllCustomers();
+	    model.addAttribute("customers", customers);
+	    return "admin/customers";  // create this Thymeleaf page
+	}
+	
+	@GetMapping("/customers/{customerId}")
+	public String viewCustomerDetails(@PathVariable Long customerId, Model model, HttpSession session) {
+	    if (session.getAttribute("loggedInAdmin") == null)
+	        return "redirect:/insuranceadmin/login";
+	 
+	    List<Policy> policies = policyService.getPoliciesForCustomer(customerId);
+	    List<Claim> claims = claimService.getClaimsByCustomer(customerId);
+	    Customer customer = customerService.findById(customerId);
+	    model.addAttribute("policies", policies);
+	    model.addAttribute("claims", claims);
+	    model.addAttribute("customer", customer);
+	    return "admin/customer-details";  // create this view
+	}
+	
+	
 }

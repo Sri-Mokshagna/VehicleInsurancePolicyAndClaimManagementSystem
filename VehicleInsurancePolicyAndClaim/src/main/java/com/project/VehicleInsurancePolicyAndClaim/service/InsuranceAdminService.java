@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.VehicleInsurancePolicyAndClaim.model.Claim;
+import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
 import com.project.VehicleInsurancePolicyAndClaim.model.InsuranceAdmin;
 import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
 import com.project.VehicleInsurancePolicyAndClaim.repository.ClaimRepository;
+import com.project.VehicleInsurancePolicyAndClaim.repository.CustomerRepository;
 import com.project.VehicleInsurancePolicyAndClaim.repository.InsuranceAdminRepository;
 import com.project.VehicleInsurancePolicyAndClaim.repository.PolicyRepository;
 
@@ -23,6 +25,9 @@ public class InsuranceAdminService {
 	
 	@Autowired
 	private PolicyRepository policyRepo;
+	
+	@Autowired
+	private CustomerRepository customerRepo;
 	
 	public List<Claim> getSubmittedClaims(){
 		return claimRepo.findByClaimStatus("SUBMITTED");
@@ -47,4 +52,21 @@ public class InsuranceAdminService {
 			claimRepo.save(claim);
 		}
 	}
+	
+	public Optional<Customer> findCustomerByName(String username) {
+	    return customerRepo.findByName(username);
+	}
+	 
+	public List<Policy> getPoliciesByCustomer(Customer customer) {
+	    return policyRepo.findByVehicle_Customer(customer);
+	}
+	 
+	public List<Claim> getClaimsByCustomer(Customer customer) {
+	    return claimRepo.findByPolicy_Vehicle_Customer(customer);
+	}
+	public List<Customer> getAllCustomers() {
+	    return customerRepo.findAll();
+	}
+	 
+	
 }

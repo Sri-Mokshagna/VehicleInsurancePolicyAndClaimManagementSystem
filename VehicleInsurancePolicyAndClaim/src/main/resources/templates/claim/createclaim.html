@@ -78,7 +78,7 @@
             let calculatedClaimAmount = Math.floor((damagePercent / 100) * coverageAmount);
  
             // Check against balance - adjust if it exceeds
-            if (calculatedClaimAmount > policyBalance) {
+            if(calculatedClaimAmount > policyBalance) {
                 calculatedClaimAmount = policyBalance;
             }
  

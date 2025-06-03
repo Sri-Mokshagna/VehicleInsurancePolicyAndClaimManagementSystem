@@ -13,5 +13,6 @@ import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
 public interface ClaimRepository extends JpaRepository<Claim,Long>{
 	List<Claim> findByPolicy_Vehicle_Customer(Customer customer);
 	List<Claim> findByClaimStatus(String status);
-List<Claim> findByPolicy_Vehicle(Vehicle vehicle);
+	List<Claim> findByPolicy_Vehicle(Vehicle vehicle);
+	List<Claim> findByPolicy_Vehicle_CustomerCustomerId(Long customerId);
 }

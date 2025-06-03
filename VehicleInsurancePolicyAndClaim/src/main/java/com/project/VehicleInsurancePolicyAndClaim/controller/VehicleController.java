@@ -56,7 +56,9 @@ public class VehicleController {
 	}
 	
 	@GetMapping("/vehicle/{id}")
-	public String viewVehicle(@PathVariable Long id, Model model) {
+	public String viewVehicle(@PathVariable Long id, Model model,HttpSession session) {
+		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+		if(customer==null) return "redirect:/login";
 		Vehicle vehicle = vehicleService.getVehicleById(id);
 		model.addAttribute("vehicle",vehicleService.getVehicleById(id));
 		model.addAttribute("claims", claimService.getClaimsByVehicle(vehicle));
