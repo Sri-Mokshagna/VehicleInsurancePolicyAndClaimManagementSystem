@@ -1,31 +1,121 @@
 package com.project.VehicleInsurancePolicyAndClaim.service;
 
 import java.io.IOException;
+import java.util.Date;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.project.VehicleInsurancePolicyAndClaim.model.Policy;
+import com.project.VehicleInsurancePolicyAndClaim.model.Vehicle;
+import com.project.VehicleInsurancePolicyAndClaim.model.Customer;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 public class PolicyPdfGenerator {
     public static void generate(HttpServletResponse response, Policy policy) throws IOException, DocumentException {
-        Document document = new Document();
+        Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
-        
-        document.add(new Paragraph("Policy Report"));
-        document.add(new Paragraph("Policy Number: " + policy.getPolicyNumber()));
-        document.add(new Paragraph("Coverage Type: " + policy.getCoverageType()));
-        document.add(new Paragraph("Coverage Amount: " + policy.getCoverageAmount()));
-        document.add(new Paragraph("Premium Amount: " + policy.getPremiumAmount()));
-        document.add(new Paragraph("Status: " + policy.getPolicyStatus()));
-        document.add(new Paragraph("Start Date: " + policy.getStartDate()));
-        document.add(new Paragraph("End Date: " + policy.getEndDate()));
- 
+
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, BaseColor.BLACK);
+        Paragraph title = new Paragraph("Vehicle Insurance Policy Report", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingAfter(10f);
+        document.add(title);
+
+        LineSeparator separator = new LineSeparator();
+        separator.setLineColor(BaseColor.GRAY);
+        document.add(new Chunk(separator));
+
+        Font sectionFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+        Paragraph policyHeader = new Paragraph("Policy Details", sectionFont);
+        policyHeader.setSpacingBefore(15f); // Space before this section
+        policyHeader.setSpacingAfter(10f);  // Space after this section
+        policyHeader.setAlignment(Element.ALIGN_CENTER);
+        document.add(policyHeader);
+
+        PdfPTable policyTable = new PdfPTable(2);
+        policyTable.setWidthPercentage(80);
+        policyTable.setSpacingBefore(10f);
+        policyTable.setWidths(new float[]{3f, 5f});
+        policyTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        Font keyFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        Font valueFont = FontFactory.getFont(FontFactory.HELVETICA);
+
+        addTableRow(policyTable, "Policy Number", policy.getPolicyNumber(), keyFont, valueFont);
+        addTableRow(policyTable, "Coverage Type", policy.getCoverageType(), keyFont, valueFont);
+        addTableRow(policyTable, "Coverage Amount", String.valueOf(policy.getCoverageAmount()), keyFont, valueFont);
+        addTableRow(policyTable, "Premium Amount", String.valueOf(policy.getPremiumAmount()), keyFont, valueFont);
+        addTableRow(policyTable, "Status", policy.getPolicyStatus(), keyFont, valueFont);
+        addTableRow(policyTable, "Start Date", String.valueOf(policy.getStartDate()), keyFont, valueFont);
+        addTableRow(policyTable, "End Date", String.valueOf(policy.getEndDate()), keyFont, valueFont);
+        document.add(policyTable);
+
+        if (policy.getVehicle() != null) {
+            document.add(new Paragraph("\n"));
+            Paragraph vehicleHeader = new Paragraph("Vehicle Details", sectionFont);
+            vehicleHeader.setSpacingAfter(10f);
+            vehicleHeader.setAlignment(Element.ALIGN_CENTER);
+            document.add(vehicleHeader);
+            PdfPTable vehicleTable = new PdfPTable(2);
+            vehicleTable.setWidthPercentage(80);
+            vehicleTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vehicleTable.setSpacingBefore(10f);
+            vehicleTable.setWidths(new float[]{3f, 5f});
+            addTableRow(vehicleTable, "Make", policy.getVehicle().getMake(), keyFont, valueFont);
+            addTableRow(vehicleTable, "Model", policy.getVehicle().getModel(), keyFont, valueFont);
+            addTableRow(vehicleTable, "Year", String.valueOf(policy.getVehicle().getYearOfManufacture()), keyFont, valueFont);
+            addTableRow(vehicleTable, "Registration No.", policy.getVehicle().getRegistrationNumber(), keyFont, valueFont);
+            document.add(vehicleTable);
+        }
+
+        if (policy.getVehicle() != null && policy.getVehicle().getCustomer() != null) {
+            document.add(new Paragraph("\n")); // Add some vertical space
+            Paragraph customerHeader = new Paragraph("Customer Details", sectionFont);
+            customerHeader.setSpacingAfter(10f);
+            customerHeader.setAlignment(Element.ALIGN_CENTER);
+            document.add(customerHeader);
+
+            PdfPTable customerTable = new PdfPTable(2);
+            customerTable.setWidthPercentage(80);
+            customerTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+            customerTable.setSpacingBefore(10f);
+            customerTable.setWidths(new float[]{3f, 5f});
+
+            addTableRow(customerTable, "Customer Name", policy.getVehicle().getCustomer().getName(), keyFont, valueFont);
+            addTableRow(customerTable, "Customer ID", String.valueOf(policy.getVehicle().getCustomer().getCustomerId()), keyFont, valueFont);
+            addTableRow(customerTable, "Email", policy.getVehicle().getCustomer().getEmail(), keyFont, valueFont);
+            addTableRow(customerTable, "Phone", policy.getVehicle().getCustomer().getPhone(), keyFont, valueFont);
+            document.add(customerTable);
+        }
+
+        Paragraph footer = new Paragraph("Generated by Vehicle Insurance System | Contact: support@vehicleinsure.com",
+                FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10));
+        footer.setAlignment(Element.ALIGN_CENTER);
+        footer.setSpacingBefore(30f); // Space before the footer text
+        document.add(footer);
+
+        Paragraph timestamp = new Paragraph("Generated on: " + new Date().toString(),
+                FontFactory.getFont(FontFactory.HELVETICA, 9));
+        timestamp.setAlignment(Element.ALIGN_CENTER);
+        document.add(timestamp);
         document.close();
     }
+
+    private static void addTableRow(PdfPTable table, String key, String value, Font keyFont, Font valueFont) {
+
+        PdfPCell cellKey = new PdfPCell(new Phrase(key, keyFont));
+        PdfPCell cellValue = new PdfPCell(new Phrase(value, valueFont));
+        float cellPadding = 5f;
+        cellKey.setPadding(cellPadding);
+        cellValue.setPadding(cellPadding);
+        cellKey.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cellValue.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cellKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cellValue.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        table.addCell(cellKey);
+        table.addCell(cellValue);
+    }
 }
- 
