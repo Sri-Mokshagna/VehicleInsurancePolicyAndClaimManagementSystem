@@ -15,7 +15,7 @@ public class PolicyPdfGenerator {
         Document document = new Document();
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
- 
+        
         document.add(new Paragraph("Policy Report"));
         document.add(new Paragraph("Policy Number: " + policy.getPolicyNumber()));
         document.add(new Paragraph("Coverage Type: " + policy.getCoverageType()));

@@ -46,11 +46,10 @@ public class ClaimServiceTest {
     private Claim claim;
     private MultipartFile mockImageFile;
 
-    private final String UPLOAD_DIR = "uploads"; // A dummy upload directory for testing
+    private final String UPLOAD_DIR = "uploads"; 
 
     @BeforeEach
     void setUp() {
-        // Inject the @Value field 'uploadDir' using ReflectionTestUtils
         ReflectionTestUtils.setField(claimService, "uploadDir", UPLOAD_DIR);
 
         customer = new Customer();
@@ -71,33 +70,28 @@ public class ClaimServiceTest {
         claim = new Claim();
         claim.setClaimId(1L);
         claim.setClaimAmount(5000.0);
-        claim.setPolicy(policy); // Link claim to policy
+        claim.setPolicy(policy); 
 
-        // Mock a MultipartFile for testing file uploads
         mockImageFile = mock(MultipartFile.class);
     }
 
     @Test
     void testFileClaim_WithImage() throws IOException {
-        // Simulate a non-empty image file
         when(mockImageFile.isEmpty()).thenReturn(false);
         when(mockImageFile.getOriginalFilename()).thenReturn("accident_photo.jpg");
         when(mockImageFile.getInputStream()).thenReturn(new ByteArrayInputStream("image data".getBytes()));
 
-        // Mock static Files.copy and LocalDate.now()
         try (MockedStatic<Files> mockedFiles = mockStatic(Files.class);
              MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
 
             LocalDate fixedDate = LocalDate.of(2024, 6, 3);
             mockedLocalDate.when(LocalDate::now).thenReturn(fixedDate);
 
-            // Configure mock behavior for Files.copy
             mockedFiles.when(() -> Files.copy(any(InputStream.class), any(Path.class))).thenReturn(1L);
 
-            // Mock the repository save method
             when(claimRepository.save(any(Claim.class))).thenAnswer(invocation -> {
                 Claim savedClaim = invocation.getArgument(0);
-                savedClaim.setClaimId(2L); // Simulate ID being set by repository
+                savedClaim.setClaimId(2L);
                 return savedClaim;
             });
 
@@ -113,30 +107,25 @@ public class ClaimServiceTest {
             assertEquals(fixedDate, claimToFile.getClaimDate());
             assertEquals("SUBMITTED", claimToFile.getClaimStatus());
 
-            // Verify Files.copy was called with correct arguments
             mockedFiles.verify(() -> Files.copy(any(InputStream.class), argThat(path ->
                     path.toString().startsWith(UPLOAD_DIR) && path.getFileName().toString().contains("accident_photo.jpg")
             )), times(1));
 
-            // Verify claimRepository.save was called once
             verify(claimRepository, times(1)).save(claimToFile);
         }
     }
 
     @Test
     void testFileClaim_WithoutImage() throws IOException {
-        // Simulate an empty image file
         when(mockImageFile.isEmpty()).thenReturn(true);
 
-        // Mock static LocalDate.now()
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
             LocalDate fixedDate = LocalDate.of(2024, 6, 3);
             mockedLocalDate.when(LocalDate::now).thenReturn(fixedDate);
 
-            // Mock the repository save method
             when(claimRepository.save(any(Claim.class))).thenAnswer(invocation -> {
                 Claim savedClaim = invocation.getArgument(0);
-                savedClaim.setClaimId(3L); // Simulate ID being set by repository
+                savedClaim.setClaimId(3L); 
                 return savedClaim;
             });
 
@@ -146,16 +135,14 @@ public class ClaimServiceTest {
 
             claimService.fileClaim(claimToFile, mockImageFile);
 
-            assertNull(claimToFile.getImagePath()); // Image path should remain null
+            assertNull(claimToFile.getImagePath()); 
             assertEquals(fixedDate, claimToFile.getClaimDate());
             assertEquals("SUBMITTED", claimToFile.getClaimStatus());
 
-            // Verify Files.copy was never called
-            try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) { // Need to mock it even to verify 'never'
+            try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) { 
                 mockedFiles.verify(() -> Files.copy(any(InputStream.class), any(Path.class)), never());
             }
 
-            // Verify claimRepository.save was called once
             verify(claimRepository, times(1)).save(claimToFile);
         }
     }

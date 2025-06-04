@@ -36,24 +36,17 @@ public class CustomerServiceTest {
         customer = new Customer();
         customer.setCustomerId(1);
         customer.setEmail("test@example.com");
-        customer.setPassword(rawPassword); // Set raw password for initial customer object
-
-        // Manually hash the password to simulate what BCrypt would do
+        customer.setPassword(rawPassword); 
         hashedPassword = BCrypt.withDefaults().hashToString(12, rawPassword.toCharArray());
     }
 
     @Test
     void testSaveCustomer() {
-        // Prepare the customer object with the raw password
         Customer customerToSave = new Customer();
         customerToSave.setEmail("new@example.com");
         customerToSave.setPassword("newPassword");
 
-        // When save is called, return the customer object that was passed to the repository.
-        // The CustomerService itself will have already hashed the password on this object.
         when(customerRepository.save(any(Customer.class))).thenAnswer(invocation -> {
-            // Return the customer object that was passed as an argument to the save method.
-            // This object will already contain the password hashed by the service.
             return invocation.getArgument(0);
         });
 
@@ -61,14 +54,9 @@ public class CustomerServiceTest {
 
         assertNotNull(savedCustomer);
         assertEquals("new@example.com", savedCustomer.getEmail());
-        // Verify that the password in the saved customer is not the raw password,
-        // implying it has been hashed.
         assertNotEquals("newPassword", savedCustomer.getPassword());
-        // Now, verify that the raw password can be successfully verified against the
-        // hashed password stored in the savedCustomer object, which came from the service.
         assertTrue(BCrypt.verifyer().verify("newPassword".toCharArray(), savedCustomer.getPassword()).verified);
 
-        // Verify that the save method on the repository was called exactly once
         verify(customerRepository, times(1)).save(any(Customer.class));
     }
 
