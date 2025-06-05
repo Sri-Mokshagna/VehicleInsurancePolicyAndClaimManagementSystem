@@ -2,6 +2,7 @@ package com.project.VehicleInsurancePolicyAndClaim.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,10 @@ public class ClaimController {
     @GetMapping("/createclaim")
     public String showClaimForm(Model model, HttpSession session) {
         Customer customer = (Customer) session.getAttribute("loggedInCustomer");
-        List<Policy> policies = policyService.getPoliciesForCustomer(customer);
+        List<Policy> policies = policyService.getPoliciesForCustomer(customer)
+        						.stream().filter(policy -> policy.getBalance()>0)
+        						.collect(Collectors.toList());
+        
         model.addAttribute("policies", policies);
         model.addAttribute("claim", new Claim());
         return "claim/createclaim";

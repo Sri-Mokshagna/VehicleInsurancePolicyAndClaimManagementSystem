@@ -51,6 +51,8 @@ public class ReportController {
     public String listClaims(Model model, HttpSession session) {
         Customer customer = (Customer) session.getAttribute("loggedInCustomer");
         List<Claim> claims = reportService.getClaimsByCustomer(customer.getCustomerId());
+        List<Policy> policies = reportService.getPoliciesByCustomer(customer.getCustomerId());
+        model.addAttribute("policies", policies);
         model.addAttribute("claims", claims);
         return "report/claim-list";
     }

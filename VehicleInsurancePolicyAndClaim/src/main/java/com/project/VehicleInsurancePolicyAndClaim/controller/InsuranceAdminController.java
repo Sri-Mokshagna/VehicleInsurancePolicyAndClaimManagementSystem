@@ -133,6 +133,13 @@ public class InsuranceAdminController {
 	    model.addAttribute("customer", customer);
 	    return "admin/customer-details";  // create this view
 	}
-	
+	@GetMapping("/claim/{claimId}/report")
+	public String showReportDownloadPageClaim(@PathVariable Long claimId, Model model, HttpSession session) 
+	{    
+		if (session.getAttribute("loggedInAdmin") == null)       
+			return "redirect:/insuranceadmin/login";    
+		model.addAttribute("claimId", claimId);    
+		return "admin/downloadClaim";
+	}
 	
 }

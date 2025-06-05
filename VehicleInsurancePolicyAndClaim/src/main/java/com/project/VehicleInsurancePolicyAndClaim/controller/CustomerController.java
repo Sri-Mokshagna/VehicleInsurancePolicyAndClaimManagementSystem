@@ -36,12 +36,39 @@ public class CustomerController {
 	public String home() {
 		return "home";
 	}
+	@GetMapping("/about")
+	public String aboutUs()
+	{
+		return "about";
+	}
+
+	@GetMapping("/privacy")
+	public String privacy(){
+		return "privacy";
+	}
+
+	@GetMapping("/terms")
+	public String termsAndConditions(){
+		return "termsAndConditions";
+	}
+
+	@GetMapping("/policy/list")
+	public String dashboardPolicy(){
+		return "dashboardPolicy";
+	}
+	
+	@GetMapping("/contact")
+	public String contactUs() {
+		return "contactUs";
+	}
 	
 	@GetMapping("/register")
 	public String showRegistrationForm(Model model) {
 		model.addAttribute("customer",new Customer());
 		return "customer/register";
 	}
+	
+	
 	
 	@PostMapping("/register")
 	public String registerCustomer(@ModelAttribute("customer") Customer customer,Model model) {

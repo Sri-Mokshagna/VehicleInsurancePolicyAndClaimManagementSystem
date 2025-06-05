@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - VI Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .content {
+            flex: 1;
+            padding: 40px 0;
+        }
+        .privacy-section h2 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #343a40; /* Dark gray for headings */
+        }
+        .privacy-section p, .privacy-section ul {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .privacy-section ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container content">
+    <h1 class="text-center mb-4">Privacy Policy</h1>
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <p class="text-muted text-center">Last Updated: June 5, 2025</p>
+
+            <div class="privacy-section">
+                <h2>1. Introduction</h2>
+                <p>Welcome to VI Portal. We are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="/">VI Portal</a> and use our services.</p>
+                <p>Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>2. Information We Collect</h2>
+                <p>We may collect personal information that you voluntarily provide to us when you register on the site, express an interest in obtaining information about us or our products and services, when you participate in activities on the site (such as posting messages in our forums or entering contests), or otherwise when you contact us.</p>
+                <p>The personal information that we collect depends on the context of your interactions with us and the Site, the choices you make, and the products and features you use. The personal information we collect may include the following:</p>
+                <ul>
+                    <li><strong>Personal Identifiers:</strong> Name, email address, postal address, phone number, date of birth, etc.</li>
+                    <li><strong>Insurance-related Information:</strong> Vehicle details (make, model, VIN, registration), policy history, claims information.</li>
+                    <li><strong>Financial Information:</strong> Payment method information (though we typically use secure third-party payment processors).</li>
+                    <li><strong>Login Credentials:</strong> Usernames and passwords (stored securely).</li>
+                </ul>
+                <p>We may also collect non-personal information, such as IP address, browser type, operating system, and website usage data through cookies and similar technologies.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>3. How We Use Your Information</h2>
+                <p>We use personal information collected via our Site for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations. We indicate the specific processing grounds we rely on next to each purpose listed below.</p>
+                <ul>
+                    <li>To facilitate account creation and logon process.</li>
+                    <li>To fulfill and manage your orders and insurance policies.</li>
+                    <li>To respond to your inquiries and offer support.</li>
+                    <li>To send you marketing and promotional communications (with your consent).</li>
+                    <li>To personalize your experience on the Site.</li>
+                    <li>To improve our website and services.</li>
+                    <li>To detect and prevent fraud.</li>
+                    <li>To comply with legal obligations.</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>4. Disclosure of Your Information</h2>
+                <p>We may share your information with third parties in the following situations:</p>
+                <ul>
+                    <li><strong>With Insurance Providers:</strong> To process your insurance applications and claims.</li>
+                    <li><strong>Service Providers:</strong> Third-party vendors, service providers, contractors, or agents who perform services for us or on our behalf and require access to such information to do that work.</li>
+                    <li><strong>Legal Requirements:</strong> To comply with legal obligations or respond to lawful requests.</li>
+                    <li><strong>Business Transfers:</strong> In connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>5. Security of Your Information</h2>
+                <p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>6. Your Privacy Rights</h2>
+                <p>Depending on your jurisdiction, you may have the right to access, update, or delete your personal information. To exercise these rights, please contact us using the contact details provided below.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>7. Changes to This Privacy Policy</h2>
+                <p>We may update this Privacy Policy from time to time. The updated version will be indicated by an updated "Last Updated" date and the updated version will be effective as soon as it is accessible. We encourage you to review this Privacy Policy frequently to be informed of how we are protecting your information.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>8. Contact Us</h2>
+                <p>If you have questions or comments about this Privacy Policy, please contact us at:</p>
+                <p><strong>VI Portal Support Team</strong><br>
+                    Email: <a href="mailto:support@viportal.com">support@viportal.com</a><br>
+                    Phone: +91 12345 67890<br>
+                    Address: [Your Company Address, if applicable]</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
