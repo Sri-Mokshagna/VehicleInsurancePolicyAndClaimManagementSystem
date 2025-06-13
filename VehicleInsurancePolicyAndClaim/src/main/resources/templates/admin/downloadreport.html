@@ -14,7 +14,7 @@
 <div class="container mt-5">
     <div class="card text-center shadow">
         <div class="card-body">
-            <h5 class="card-title">Download Report for Policy #<span th:text="${policyId}"></span></h5>
+            <h5 class="card-title">Download Report for Policy #<span th:text="${policyNumber}"></span></h5>
             <a th:href="@{'/reports/policy/' + ${policyId} + '/pdf'}" class="btn btn-danger m-2">Download PDF</a>
             <a th:href="@{'/reports/policy/' + ${policyId} + '/excel'}" class="btn btn-success m-2">Download Excel</a>
         </div>

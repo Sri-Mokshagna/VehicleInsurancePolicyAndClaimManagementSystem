@@ -28,7 +28,6 @@ public class ClaimController {
  
     @Autowired
     private ClaimService claimService;
- 
     @Autowired
     private PolicyService policyService;
     
